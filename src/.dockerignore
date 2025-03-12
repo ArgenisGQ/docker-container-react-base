@@ -1,0 +1,27 @@
+# Excluir dependencias y artefactos
+node_modules/
+build/
+dist/
+npm-debug.log
+
+# Ignorar archivos de entorno locales
+.env*.local
+.env
+
+# Excluir sistemas de control de versiones
+.git/
+.gitignore
+
+# Ignorar configuraciones de IDE
+.idea/
+.vscode/
+
+# Excluir archivos del sistema
+.DS_Store
+
+# Omitir logs y backups
+*.log
+*.bak
+
+# Ignorar configuración de Docker no esencial
+docker-compose.override.yml

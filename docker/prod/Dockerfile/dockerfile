@@ -1,0 +1,27 @@
+# Stage 1: Builder
+FROM node:18.2.0-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production
+COPY . .
+RUN npm run build
+
+# Stage 2: Servidor de producción
+FROM node:18.2.0-alpine
+WORKDIR /app
+
+# Instalar serve globalmente
+RUN npm install -g serve@14.2.0
+
+# Copiar build y configurar
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/package*.json ./
+
+# Configurar usuario no-root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+    && chown -R appuser:appgroup /app
+USER appuser
+
+#EXPOSE 80
+#CMD ["serve", "-s", "build", "-l", "3000", "--no-clipboard"]
+CMD ["serve", "-s", "build", "-l", "3000", "--no-clipboard"]

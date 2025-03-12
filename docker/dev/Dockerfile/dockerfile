@@ -1,0 +1,27 @@
+# Stage 1: Builder
+FROM node:18.2.0-alpine AS builder
+WORKDIR /app
+
+# Crear usuario no-root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+COPY package*.json ./
+#RUN npm install --package-lock-only
+RUN npm ci --cache=/tmp/.npm-cache
+COPY . .
+
+# Stage 2: Desarrollo
+FROM node:18.2.0-alpine
+WORKDIR /app
+COPY --from=builder /app /app
+COPY --from=builder /tmp/.npm-cache /tmp/.npm-cache
+
+# Configuración de permisos
+RUN chown -R node:node /app
+USER node
+
+#EXPOSE 3000 9229
+#EXPOSE 3000
+CMD ["npm", "start"]
