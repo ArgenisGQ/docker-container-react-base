@@ -21,6 +21,7 @@ services:
       - app_logs:/app/logs
     env_file:
       - ./env/dev.env
+    container_name: dev-arg
     networks:
       - red-nginx
     #expose:
@@ -38,6 +39,7 @@ services:
       - env_config:/app/env
     env_file:
       - ./env/prod.env
+    container_name: pro-arg
     networks:
       - red-nginx
     expose:
